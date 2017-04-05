@@ -1,0 +1,25 @@
+{
+  "visual": {
+    "name": "myLittleBarChart",
+    "displayName": "My Little Bar Chart",
+    "guid": "myLittleBarChartC2075CFB318240BC886AFAE5852EBCEB",
+    "visualClassName": "Visual",
+    "version": "1.0.0",
+    "description": "",
+    "supportUrl": "",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "1.6.0",
+  "author": {
+    "name": "",
+    "email": ""
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": "dependencies.json",
+  "stringResources": []
+}
