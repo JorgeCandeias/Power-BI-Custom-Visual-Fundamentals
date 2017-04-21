@@ -25,19 +25,95 @@
  */
 
 module powerbi.extensibility.visual.myLittleBarChartC2075CFB318240BC886AFAE5852EBCEB  {
+
+    interface DataPoint {
+        category: string;
+        value: number;
+    };
+
+    interface ViewModel {
+        dataPoints: DataPoint[];
+        maxValue: number;
+    };
+
     export class Visual implements IVisual {
-        private target: HTMLElement;
-        private updateCount: number;
+
+        private host: IVisualHost;
+        private svg: d3.Selection<SVGElement>;
+        private barGroup: d3.Selection<SVGElement>;
+        private xPadding: number = 0.1;
 
         constructor(options: VisualConstructorOptions) {
-            console.log('Visual constructor', options);
-            this.target = options.element;
-            this.updateCount = 0;
+            this.host = options.host;
+            this.svg = d3.select(options.element)
+                .append("svg")
+                .classed("my-little-bar-chart", true);
+            this.barGroup = this.svg.append("g")
+                .classed("bar-group", true);
         }
 
         public update(options: VisualUpdateOptions) {
-            console.log('Visual update', options);
-            this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
+            let sample: DataPoint[] = [
+                {
+                    category: "Apples",
+                    value: 10
+                },
+                {
+                    category: "Bananas",
+                    value: 20
+                },
+                {
+                    category: "Cherries",
+                    value: 30
+                },
+                {
+                    category: "Dates",
+                    value: 40
+                },
+                {
+                    category: "Elderberries",
+                    value: 50
+                }
+            ];
+
+            let viewModel: ViewModel = {
+                dataPoints: sample,
+                maxValue: d3.max(sample, x => x.value)
+            };
+
+            let width = options.viewport.width;
+            let height = options.viewport.height;
+
+            this.svg.attr({
+                width: width,
+                height: height
+            });
+
+            let yScale = d3.scale.linear()
+                .domain([0, viewModel.maxValue])
+                .range([height, 0]);
+
+            let xScale = d3.scale.ordinal()
+                .domain(viewModel.dataPoints.map(d => d.category))
+                .rangeRoundBands([0, width], this.xPadding);
+
+            let bars = this.barGroup
+                .selectAll(".bar")
+                .data(viewModel.dataPoints);
+
+            bars.enter()
+                .append("rect")
+                .classed("bar", true);
+
+            bars.attr({
+                width: xScale.rangeBand(),
+                height: d => height - yScale(d.value),
+                y: d => yScale(d.value),
+                x: d => xScale(d.category)
+            });
+
+            bars.exit()
+                .remove();
         }
     }
 }
