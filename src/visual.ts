@@ -53,33 +53,8 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions) {
-            let sample: DataPoint[] = [
-                {
-                    category: "Apples",
-                    value: 10
-                },
-                {
-                    category: "Bananas",
-                    value: 20
-                },
-                {
-                    category: "Cherries",
-                    value: 30
-                },
-                {
-                    category: "Dates",
-                    value: 40
-                },
-                {
-                    category: "Elderberries",
-                    value: 50
-                }
-            ];
 
-            let viewModel: ViewModel = {
-                dataPoints: sample,
-                maxValue: d3.max(sample, x => x.value)
-            };
+            let viewModel = this.getViewModel(options);
 
             let width = options.viewport.width;
             let height = options.viewport.height;
@@ -114,6 +89,39 @@ module powerbi.extensibility.visual {
 
             bars.exit()
                 .remove();
+        }
+
+        private getViewModel(options: VisualUpdateOptions): ViewModel {
+
+            let dv = options.dataViews;
+
+            let viewModel: ViewModel = {
+                dataPoints: [],
+                maxValue: 0
+            };
+
+            if (!dv
+                || !dv[0]
+                || !dv[0].categorical
+                || !dv[0].categorical.categories
+                || !dv[0].categorical.categories[0].source
+                || !dv[0].categorical.values)
+                return viewModel;
+
+            let view = dv[0].categorical;
+            let categories = view.categories[0];
+            let values = view.values[0];
+
+            for (let i = 0, len = Math.max(categories.values.length, values.values.length); i < len; i++) {
+                viewModel.dataPoints.push({
+                    category: <string>categories.values[i],
+                    value: <number>values.values[i]
+                });
+            }
+
+            viewModel.maxValue = d3.max(viewModel.dataPoints, d => d.value);
+
+            return viewModel;
         }
     }
 }
