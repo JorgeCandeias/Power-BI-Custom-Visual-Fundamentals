@@ -29,6 +29,7 @@ module powerbi.extensibility.visual {
     interface DataPoint {
         category: string;
         value: number;
+        colour: string;
     };
 
     interface ViewModel {
@@ -80,12 +81,16 @@ module powerbi.extensibility.visual {
                 .append("rect")
                 .classed("bar", true);
 
-            bars.attr({
-                width: xScale.rangeBand(),
-                height: d => height - yScale(d.value),
-                y: d => yScale(d.value),
-                x: d => xScale(d.category)
-            });
+            bars
+                .attr({
+                    width: xScale.rangeBand(),
+                    height: d => height - yScale(d.value),
+                    y: d => yScale(d.value),
+                    x: d => xScale(d.category)
+                })
+                .style({
+                    fill: d => d.colour
+                });
 
             bars.exit()
                 .remove();
@@ -115,7 +120,8 @@ module powerbi.extensibility.visual {
             for (let i = 0, len = Math.max(categories.values.length, values.values.length); i < len; i++) {
                 viewModel.dataPoints.push({
                     category: <string>categories.values[i],
-                    value: <number>values.values[i]
+                    value: <number>values.values[i],
+                    colour: this.host.colorPalette.getColor(<string>categories.values[i]).value
                 });
             }
 
