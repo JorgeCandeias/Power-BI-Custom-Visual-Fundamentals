@@ -30,6 +30,7 @@ module powerbi.extensibility.visual {
         category: string;
         value: number;
         colour: string;
+        identity: powerbi.visuals.ISelectionId;
     };
 
     interface ViewModel {
@@ -43,6 +44,7 @@ module powerbi.extensibility.visual {
         private svg: d3.Selection<SVGElement>;
         private barGroup: d3.Selection<SVGElement>;
         private xPadding: number = 0.1;
+        private selectionManager: ISelectionManager;
 
         constructor(options: VisualConstructorOptions) {
             this.host = options.host;
@@ -51,6 +53,8 @@ module powerbi.extensibility.visual {
                 .classed("my-little-bar-chart", true);
             this.barGroup = this.svg.append("g")
                 .classed("bar-group", true);
+
+            this.selectionManager = this.host.createSelectionManager();
         }
 
         public update(options: VisualUpdateOptions) {
@@ -90,6 +94,20 @@ module powerbi.extensibility.visual {
                 })
                 .style({
                     fill: d => d.colour
+                })
+                .on("click", (d) => {
+                    this.selectionManager
+                        .select(d.identity, true)
+                        .then(ids => {
+                            bars.style({
+                                "fill-opacity": d =>
+                                    ids.length > 0 ?
+                                        ids.indexOf(d.identity) >= 0 ?
+                                            1.0 :
+                                            0.5 :
+                                        1.0
+                            });
+                        });
                 });
 
             bars.exit()
@@ -121,7 +139,10 @@ module powerbi.extensibility.visual {
                 viewModel.dataPoints.push({
                     category: <string>categories.values[i],
                     value: <number>values.values[i],
-                    colour: this.host.colorPalette.getColor(<string>categories.values[i]).value
+                    colour: this.host.colorPalette.getColor(<string>categories.values[i]).value,
+                    identity: this.host.createSelectionIdBuilder()
+                        .withCategory(categories, i)
+                        .createSelectionId()
                 });
             }
 
