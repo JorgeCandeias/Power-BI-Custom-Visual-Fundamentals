@@ -1,5 +1,58 @@
 {
     "supportsHighlight": true,
+    "objects": {
+        "xAxis": {
+            "displayName": "X Axis",
+            "properties": {
+                "show": {
+                    "displayName": "Show X Axis",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "padding": {
+                    "displayName": "Padding",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "yAxis": {
+            "displayName": "Y Axis",
+            "properties": {
+                "show": {
+                    "displayName": "Show Y Axis",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "padding": {
+                    "displayName": "Padding",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "borders": {
+            "displayName": "Borders",
+            "properties": {
+                "top": {
+                    "displayName": "Top",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "bottom": {
+                    "displayName": "Bottom",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        }
+    },
     "dataRoles": [
         {
             "displayName": "Axis",
