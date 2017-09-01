@@ -28,6 +28,23 @@ module powerbi.extensibility.visual {
         private xAxisGroup: d3.Selection<SVGElement>;
         private yAxisGroup: d3.Selection<SVGElement>;
         private viewModel: ViewModel;
+        private locale: string;
+
+        private resources = new Resources({
+            "DeviationAbsolute": {
+                defaultValue: "Deviation (abs)",
+                localization: {
+                    "pt-PT": "Desvio (abs)"
+                }
+            },
+            "DeviationPercent": {
+                defaultValue: "Deviation (%)",
+                localization: {
+                    "pt-PT": "Desvio (%)"
+                }
+            }
+        });
+
 
         private settings = {
             axis: {
@@ -65,7 +82,11 @@ module powerbi.extensibility.visual {
         }
 
         constructor(options: VisualConstructorOptions) {
+
             this.host = options.host;
+
+            this.locale = this.host.locale;
+
             this.svg = d3.select(options.element)
                 .append("svg")
                 .classed("my-little-bar-chart", true);
@@ -287,7 +308,7 @@ module powerbi.extensibility.visual {
 
             for (let dp of viewModel.dataPoints) {
                 dp.tooltips.push({
-                    displayName: "Deviation (abs)",
+                    displayName: this.resources.getLocalString("DeviationAbsolute", this.locale),
                     value: (dp.value - viewModel.average).toFixed(2)
                 });
             }
@@ -295,7 +316,7 @@ module powerbi.extensibility.visual {
             if (viewModel.average != 0) {
                 for (let dp of viewModel.dataPoints) {
                     dp.tooltips.push({
-                        displayName: "Deviation (%)",
+                        displayName: this.resources.getLocalString("DeviationPercent", this.locale),
                         value: (100 * (dp.value - viewModel.average) / viewModel.average).toFixed(2) + "%"
                     })
                 }
