@@ -5,5 +5,39 @@
     "bootstrap": "^3.3.7",
     "d3": "^3.5.17",
     "powerbi-visuals-utils-dataviewutils": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.5.54",
+    "@types/jasmine-jquery": "^1.5.32",
+    "@types/jquery": "^2.0.48",
+    "coveralls": "^2.13.1",
+    "jasmine": "^2.8.0",
+    "jasmine-core": "^2.8.0",
+    "jasmine-jquery": "^2.1.1",
+    "jasmine-ts": "^0.2.1",
+    "jquery": "^2.2.4",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-remap-istanbul": "^0.6.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-typescript-preprocessor": "^0.3.1",
+    "lodash": "^4.17.4",
+    "powerbi-visuals-tools": "^1.7.2",
+    "powerbi-visuals-utils-testutils": "^1.0.1",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.7.0",
+    "tslint-microsoft-contrib": "^5.0.1",
+    "typescript": "^2.4.2"
+  },
+  "scripts": {
+    "postinstall": "pbiviz update 1.6.0",
+    "pbiviz": "pbiviz",
+    "start": "pbiviz start",
+    "package": "pbiviz package",
+    "lint": "node node_modules/tslint/bin/tslint \"+(src|test)/**/*.ts\"",
+    "pretest": "pbiviz package --resources --no-minify --no-pbiviz --no-plugin",
+    "test": "karma start"
   }
 }

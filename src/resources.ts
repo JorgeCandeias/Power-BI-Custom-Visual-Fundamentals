@@ -6,7 +6,7 @@ module powerbi.extensibility.visual {
             this.items = items;
         }
 
-        private items: { [key: string]: LocalizedResource }
+        private items: { [key: string]: LocalizedResource };
 
         public getLocalString(key: string, locale: string): string {
             if (locale && key) {
