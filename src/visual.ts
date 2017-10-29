@@ -56,6 +56,10 @@ module powerbi.extensibility.visual {
                     show: {
                         default: true,
                         value: true
+                    },
+                    color: {
+                        default: "#777777",
+                        value: "#777777"
                     }
                 },
                 y: {
@@ -66,6 +70,10 @@ module powerbi.extensibility.visual {
                     show: {
                         default: true,
                         value: true
+                    },
+                    color: {
+                        default: "#777777",
+                        value: "#777777"
                     }
                 }
             },
@@ -143,7 +151,7 @@ module powerbi.extensibility.visual {
                     transform: "translate(" + yAxisPadding + ",0)"
                 })
                 .style({
-                    fill: "#777777",
+                    fill: this.settings.axis.y.color.value,
                     display: this.settings.axis.y.show.value ? null : "none"
                 })
                 .selectAll("text")
@@ -158,7 +166,7 @@ module powerbi.extensibility.visual {
                     transform: "translate(0, " + (height - xAxisPadding - this.settings.border.bottom.value) + ")"
                 })
                 .style({
-                    fill: "#777777",
+                    fill: this.settings.axis.x.color.value,
                     display: this.settings.axis.x.show.value ? null : "none"
                 })
                 .selectAll("text")
@@ -238,11 +246,13 @@ module powerbi.extensibility.visual {
         private updateSettings(options: VisualUpdateOptions) {
 
             this.settings.axis.x.show.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "xAxis", propertyName: "show" }, this.settings.axis.x.show.default);
-            this.settings.axis.x.padding.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "xAxis", propertyName: "padding" }, this.settings.axis.x.padding.value);
+            this.settings.axis.x.padding.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "xAxis", propertyName: "padding" }, this.settings.axis.x.padding.default);
+            this.settings.axis.x.color.value = DataViewObjects.getFillColor(options.dataViews[0].metadata.objects, { objectName: "xAxis", propertyName: "color" }, this.settings.axis.x.color.default);
             this.settings.axis.y.show.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "yAxis", propertyName: "show" }, this.settings.axis.y.show.default);
-            this.settings.axis.y.padding.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "yAxis", propertyName: "padding" }, this.settings.axis.y.padding.value);
-            this.settings.border.top.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "borders", propertyName: "top" }, this.settings.border.top.value);
-            this.settings.border.bottom.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "borders", propertyName: "bottom" }, this.settings.border.bottom.value);
+            this.settings.axis.y.padding.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "yAxis", propertyName: "padding" }, this.settings.axis.y.padding.default);
+            this.settings.axis.y.color.value = DataViewObjects.getFillColor(options.dataViews[0].metadata.objects, { objectName: "yAxis", propertyName: "color" }, this.settings.axis.y.color.default);
+            this.settings.border.top.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "borders", propertyName: "top" }, this.settings.border.top.default);
+            this.settings.border.bottom.value = DataViewObjects.getValue(options.dataViews[0].metadata.objects, { objectName: "borders", propertyName: "bottom" }, this.settings.border.bottom.default);
         }
 
         private getViewModel(options: VisualUpdateOptions): ViewModel {
@@ -337,7 +347,8 @@ module powerbi.extensibility.visual {
                         objectName: propertyGroupName,
                         properties: {
                             show: this.settings.axis.x.show.value,
-                            padding: this.settings.axis.x.padding.value
+                            padding: this.settings.axis.x.padding.value,
+                            color: this.settings.axis.x.color.value
                         },
                         selector: null
                     });
@@ -348,7 +359,8 @@ module powerbi.extensibility.visual {
                         objectName: propertyGroupName,
                         properties: {
                             show: this.settings.axis.y.show.value,
-                            padding: this.settings.axis.y.padding.value
+                            padding: this.settings.axis.y.padding.value,
+                            color: this.settings.axis.y.color.value
                         },
                         selector: null
                     });
